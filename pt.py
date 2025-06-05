@@ -1,55 +1,18 @@
-# Базовые параметры
-# url = "http://192.168.0.71:8899/PTZCtrl/channels/1/continuous"
-# url = "http://192.168.0.71:8899/videostream.cgi?user=admin&pwd=MKL28200205As"
-# url = "http://admin:2jm7t3@192.168.0.71:80/videostream.cgi"
-# url = "http://192.168.0.71/webcapture.jpg?command=snap&channel=1&user=admin&password=MKL28200205As"
-
-
-# url = "http://admin:MKL28200205As@192.168.0.71:8899"
-# params = {
-#     'pan': -20,  # отрицательные - влево, положительные - вправо
-#     'tilt': 10,   # отрицательные - вниз, положительные - вверх
-#     'zoom': 0     # отрицательные - уменьшение, положительные - увеличение
-# }
-# auth = ('admin', 'MKL28200205As')
-
-# # Отправка команды
-# response = requests.put(url, params=params, auth=auth)
-# print(f"Статус ответа: {response.text}")
-
 import cv2
 from pynput import keyboard
 import requests
 from requests.auth import HTTPDigestAuth
 import time
 
-rtsp_url = "rtsp://192.168.0.71:554/user=admin&password=MKL28200205As&channel=0&stream=1.sdp?"
+rtsp_url = "rtsp://192.168.0.241:554/user=admin&password=MKL28200205As&channel=0&stream=1?.sdp"
 cap = cv2.VideoCapture(rtsp_url)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 
 # Для камер с ONVIF (имитация SOAP через HTTP)
-ptz_url = "http://192.168.0.71:8899/onvif/ptz_service"
+ptz_url = "http://192.168.0.241:8899/onvif/ptz_service"
 headers = {'Content-Type': 'application/soap+xml'}
 auth=HTTPDigestAuth('admin', 'MKL28200205As')
-# data = """
-# <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope">
-#   <soap:Body>
-#     <tptz:ContinuousMove xmlns:tptz="http://www.onvif.org/ver20/ptz/wsdl">
-#       <tptz:ProfileToken>Profile_1</tptz:ProfileToken>
-#       <tptz:Velocity>
-#         <tt:PanTilt x="0.5" y="0" xmlns:tt="http://www.onvif.org/ver10/schema"/>
-#       </tptz:Velocity>
-#     </tptz:ContinuousMove>
-#   </soap:Body>
-# </soap:Envelope>
-# """
-# response = requests.post(
-#   url,
-#   headers=headers,
-#   data=data,
-#   auth=HTTPDigestAuth('admin', 'MKL28200205As')
-# )
 
 pan_speed = 0.5
 tilt_speed = 0.5
@@ -146,8 +109,8 @@ try:
     ok, frame = cap.read()
     cv2.imshow("video", frame)
     cv2.waitKey(1)
-  # cv2.destroyAllWindows()
-  # cap.release()
+  cv2.destroyAllWindows()
+  cap.release()
 except KeyboardInterrupt:
   pass
 finally:
