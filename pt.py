@@ -1,3 +1,4 @@
+ #pt.py
 import cv2
 from pynput import keyboard
 import requests
@@ -21,6 +22,7 @@ current_pan = 0
 current_tilt = 0
 current_zoom = 0
 
+ # Функция post-запроса (soap) PanTilt для наклона и поворота камерой при нажатой клавиши
 def ptz_move(pan=0, tilt=0):
   return requests.post(
     ptz_url,
